@@ -8,10 +8,11 @@ def get_sql_connection():
 
     if(__mydb==None):
         __mydb = mysql.connector.connect(
-            host="localhost",
-            username="root",
-            password="221223",
-            database="medicine_inventory"
+            host="",
+            username="",
+            password="",
+            database=""
         )
 
     return __mydb
+
