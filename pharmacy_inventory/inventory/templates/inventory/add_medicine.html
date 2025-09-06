@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New Medicine</title>
+    <link rel="stylesheet" href="{% static 'inventory/style.css' %}">
+</head>
+<body>
+    <h2 style="text-align:center;">Add New Medicine</h2>
+    <form method = "POST">
+        {% csrf_token %}
+        <div class="form-container">
+            <br>
+            <label>Medicine Name:</label>
+            <input type="text" name="product_name" required>
+            <br>
+
+            <label>Unit Type:</label>
+            <input type="text" name="unit_type" required>
+            <br>
+
+            <label>Unit:</label>
+            <input type="number" name="unit" required>
+            <br>
+
+            <label>Big Box Quantity:</label>
+            <input type="number" name="big_box_quantity" required>
+            <br>
+
+            <label>Number of Boxes:</label>
+            <input type="number" name="number_of_boxes" required>
+            <br>
+
+            <label>Manufacturer:</label>
+            <input type="text" name="Manufacturer" required>
+            <br>
+
+            <label>Bill:</label>
+            <input type="number" name="Bill" required>
+            <br>            
+
+            <button type="submit" class="add-item-button">Save</button>
+        </div>
+    </form>
+</body>
+</html>

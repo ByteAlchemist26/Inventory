@@ -1,0 +1,109 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pharmacy Inventory</title>
+    <link rel="stylesheet" href="{% static 'inventory/style.css' %}">
+
+</head>
+<body>
+
+<header>
+    <h1>Products</h1>
+</header>
+
+<form method="GET" class="search-form">
+    <div class="search-bar-container">
+        <div class="search-wrapper">
+            <input type="text" name="q" id="searchInput" placeholder="Search medicine..." value="{{ query }}" />
+            <button type="submit">&#128269;</button>
+        </div>
+    </div>
+</form>
+
+<div class="container">
+    <table>
+        <thead>
+            <tr>
+                <th>Medicine ID</th>
+                <th>Medicine Name</th>
+                <th>Unit</th>
+                <th>Price (₹)</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for medicine in medicines %}
+                <tr>
+                    <td>{{ medicine.product_id }}</td>
+                    <td>{{ medicine.product_name }}</td>
+                    <td>{{ medicine.unit }}</td>
+                    <td>{{ medicine.product_price }}</td>
+                    <td>
+                        <form method="POST" action="{% url 'update_stock' medicine.product_id %}" class="stock-form">
+                            {% csrf_token %}
+                            <div class="action-group">
+                                <!-- Hidden input for action type -->
+                                <input type="hidden" name="action_type" value="">
+
+                                <!-- Quantity Input (hidden by default) -->
+                                <input type="number" name="quantity" class="stock-input" min="1" max="100" step="1" style="display:none;">
+
+                                <!-- Buttons -->
+                                <button type="button" class="btn-small btn-plus" onclick="handleStockAction(this, 'add')">+</button>
+                                <button type="button" class="btn-small btn-minus" onclick="handleStockAction(this, 'remove')">−</button>        
+                            </div>
+                        </form>
+                        <!-- Info -->
+                        <a href="{% url 'medicine_info' medicine.product_id %}"><button type="button" class="btn-info">ℹ️</button></a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No medicines found.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="add-item-container">
+        <a href="{% url 'add_medicine' %}">
+            <button class="add-item-button">+ Add Item</button>
+        </a>
+    </div>
+</div>
+
+<div class="footer">
+    &copy; 2025 Pharmacy Inventory System
+</div>
+<script>
+function handleStockAction(button, action) {
+  const form = button.closest("form");
+  const quantityInput = form.querySelector(".stock-input");
+  const actionType = form.querySelector("input[name='action_type']");
+
+  if (quantityInput.style.display === "none" || quantityInput.style.display === "") {
+    actionType.value = action;
+    quantityInput.style.display = "inline";
+    quantityInput.focus();
+  } else {
+    // On second click, submit
+    if (action === "add") {
+      if (!quantityInput.value.trim()) { alert("Please enter a quantity!"); return; }
+    }
+    // For remove: quantity can be blank while stock > big_box (server handles -1)
+    actionType.value = action;
+    form.submit();
+    quantityInput.style.display = "none";
+    quantityInput.value = "";
+  }
+}
+</script>
+
+
+
+
+</body>
+</html>
